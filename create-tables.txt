@@ -1,0 +1,64 @@
+CREATE DATABASE `octopus_bi` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+
+CREATE TABLE `student` (
+  `persistenceId` int NOT NULL,
+  `firstName` varchar(45) DEFAULT NULL,
+  `lastName` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`persistenceId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `term` (
+  `persistenceId` int NOT NULL,
+  `year` date DEFAULT NULL,
+  `semester` int DEFAULT NULL,
+  `code` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`persistenceId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `enroll` (
+  `persistenceId` int NOT NULL,
+  `studentId` int DEFAULT NULL,
+  `termId` int DEFAULT NULL,
+  PRIMARY KEY (`persistenceId`),
+  KEY `FK_TERM_idx` (`termId`),
+  KEY `FK_STUDENT_idx` (`studentId`),
+  CONSTRAINT `FK_ENROLL_STUDENT` FOREIGN KEY (`studentId`) REFERENCES `student` (`persistenceId`),
+  CONSTRAINT `FK_ENROLL_TERM` FOREIGN KEY (`termId`) REFERENCES `term` (`persistenceId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `subject` (
+  `persistenceId` int NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `colorCode` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`persistenceId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `subject_term` (
+  `persistenceId` int NOT NULL,
+  `subjectId` int DEFAULT NULL,
+  `termId` int DEFAULT NULL,
+  PRIMARY KEY (`persistenceId`),
+  KEY `FK_TERM_idx` (`termId`),
+  KEY `FK_SUBJECT` (`subjectId`),
+  CONSTRAINT `FK_SUBJECT` FOREIGN KEY (`subjectId`) REFERENCES `subject` (`persistenceId`),
+  CONSTRAINT `FK_TERM` FOREIGN KEY (`termId`) REFERENCES `term` (`persistenceId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `marks` (
+  `persistenceId` int NOT NULL,
+  `marks` int DEFAULT NULL,
+  `studentId` int DEFAULT NULL,
+  `subjectTermId` int DEFAULT NULL,
+  PRIMARY KEY (`persistenceId`),
+  KEY `FK_STUDENT_idx` (`studentId`),
+  KEY `FK_SUBJECT_idx` (`subjectTermId`),
+  CONSTRAINT `FK_STUDENT` FOREIGN KEY (`studentId`) REFERENCES `student` (`persistenceId`),
+  CONSTRAINT `FK_SUBJECT_TERM` FOREIGN KEY (`subjectTermId`) REFERENCES `subject_term` (`persistenceId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
